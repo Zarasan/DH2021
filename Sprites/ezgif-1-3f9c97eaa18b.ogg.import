@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/ezgif-1-3f9c97eaa18b.ogg-a65957b16a33c115353d38549198297d.oggstr"
+
+[deps]
+
+source_file="res://Sprites/ezgif-1-3f9c97eaa18b.ogg"
+dest_files=[ "res://.import/ezgif-1-3f9c97eaa18b.ogg-a65957b16a33c115353d38549198297d.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

@@ -1,0 +1,59 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Sprites/Sentinel-2 L2A image on 2021-05-22 (1).jpg" type="Texture" id=1]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform float blur_amount : hint_range(0, 5);
+uniform vec4 u_color_key : hint_color;
+
+void fragment() {
+//	COLOR *= u_color_key;
+	COLOR = textureLod(SCREEN_TEXTURE, SCREEN_UV, blur_amount) * u_color_key;
+}"
+
+[sub_resource type="ShaderMaterial" id=5]
+shader = SubResource( 1 )
+shader_param/blur_amount = 2.0
+shader_param/u_color_key = Color( 1, 1, 1, 1 )
+
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;
+
+uniform float size = 64.0; // dots size | using int is ok
+uniform vec4 color : hint_color;
+
+void fragment() {
+	vec2 ratio = vec2(1.0, TEXTURE_PIXEL_SIZE.x / TEXTURE_PIXEL_SIZE.y); // make sure the dots are going to be 1:1
+	vec2 pixelated_uv = floor(UV * size * ratio) / (size * ratio); // pixelates the UV, first multiply with size so it can be rounded to integer then divide it with the same value so your computer can see it and multiply with ratio to fix stretching
+	float dots = length(fract(UV * size * ratio) - vec2(0.5)) * 2.0; // fracts the UV to make it loop, substract it by half then turn it into circle (using length) and finally multiply with 2 for smaller circle
+	dots = (1.0 - dots) * 10.0; // invert the dot then make it look hard so soft circle is no more
+	dots = clamp(dots, 0.0, 1.0); // limit the value to 1.0, otherwise it would add your pixel's brightness instead of being a border (this is because some of it's value is above 1.0)
+	COLOR = mix(color, texture(TEXTURE, pixelated_uv), dots); // mix the dots with the texture
+}"
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = SubResource( 3 )
+shader_param/size = 64.0
+shader_param/color = Color( 0, 0, 0, 1 )
+
+[node name="BackgroundBlur" type="Panel"]
+material = SubResource( 5 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="TextureRect" parent="."]
+self_modulate = Color( 0.466667, 0.498039, 1, 1 )
+show_behind_parent = true
+material = SubResource( 4 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+texture = ExtResource( 1 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
