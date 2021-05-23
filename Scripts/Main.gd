@@ -94,14 +94,14 @@ func spawn_cards(type):
 	var Name = Global.random(Global.Name)
 	var card = QRCode.instance()
 	card.Type = Global.random(Global.Vaccine)
-	card.Name = Global.random(Global.Name)
+	card.Name = Name
 	card.StartDate = Global.random(Global.Date)
 	card.ButType = type
 	card.connect("clicked_qrcode", self, 'show_data')
 	if type == 'VaccineCardWrongDate' or type == 'VaccineCardWrongDateBribe':
 		card.DateOffset = floor(rand_range(1, 20))
 	var id = ID.instance()
-	id.Name = Global.random(Global.Name)
+	id.Name = Name
 	id.BirthDate = Global.random(Global.BirthDate)
 	add_child_below_node($PhoneMockup,card)
 	add_child_below_node($PhoneMockup,id)
